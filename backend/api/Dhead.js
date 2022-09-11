@@ -154,19 +154,18 @@ router.route('/login').post(async(req, res) => {
     try {
         const dhead = await Dhead.findByCredentials(req.body.email, req.body.password)
         if (dhead.activated == false) {
-            res.status(400).send('Id is not activated')
-            throw new Error('Id is not activated')
-            return
+            res.status(200).send('Id is not activated')
+        } else {
+            const token = await dhead.generateAuthToken()
+            console.log(dhead.token)
+            const post = dhead.post
+            const university = dhead.university
+            const department = dhead.department
+            const name = dhead.name
+            const email = dhead.email
+            const id = dhead._id
+            res.status(200).send({ dhead, token, post, department, university, name, email, id })
         }
-        const token = await dhead.generateAuthToken()
-        console.log(dhead.token)
-        const post = dhead.post
-        const university = dhead.university
-        const department = dhead.department
-        const name = dhead.name
-        const email = dhead.email
-        const id = dhead._id
-        res.status(200).send({ dhead, token, post, department, university, name, email, id })
     } catch (e) {
         res.status(400).json(e)
     }

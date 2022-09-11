@@ -125,8 +125,10 @@ router.patch('/record/:id', async(req, res) => {
 router.patch('/recordd/:id', async(req, res) => {
     const course = await Course.findById({ _id: req.params.id })
     let col = course.record
+    console.log('init col', col)
     col = col.filter((ele) => (ele.date != req.body.date || ele.section != req.body.section))
-    const pss = { section: col }
+    console.log('updated col', col)
+    const pss = { record: col }
     const crs = await Course.findByIdAndUpdate(req.params.id, pss, { new: true, runValidators: true })
     if (!crs) res.status(400).send('not found')
     else res.status(200).send(crs)

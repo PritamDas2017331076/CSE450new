@@ -162,19 +162,19 @@ router.route('/login').post(async(req, res) => {
         const uadmin = await UAdmin.findByCredentials(req.body.email, req.body.password)
         console.log('init ', uadmin)
         if (uadmin.activated == false) {
-            res.status(400).send('Id is not activated')
-            throw new Error('Id is not activated')
+            res.status(200).send('Id is not activated')
             return
+        } else {
+            console.log('activated is true')
+            const token = await uadmin.generateAuthToken()
+            console.log(uadmin.token)
+            const post = uadmin.post
+            const university = uadmin.university
+            const name = uadmin.name
+            const email = uadmin.email
+            const id = uadmin._id
+            res.status(200).send({ uadmin, token, post, university, name, email, id })
         }
-        console.log('activated is true')
-        const token = await uadmin.generateAuthToken()
-        console.log(uadmin.token)
-        const post = uadmin.post
-        const university = uadmin.university
-        const name = uadmin.name
-        const email = uadmin.email
-        const id = uadmin._id
-        res.status(200).send({ uadmin, token, post, university, name, email, id })
     } catch (e) {
         res.status(400).json(e)
     }

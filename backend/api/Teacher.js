@@ -150,22 +150,21 @@ router.route('/login').post(async(req, res) => {
         let teacher = await Teacher.findByCredentials(req.body.email, req.body.password)
         console.log(teacher)
         if (teacher.activated == false) {
-            res.status(400).send('Id is not activated')
-            throw new Error('Id is not activated')
-            return
+            res.status(200).send('Id is not activated')
+        } else {
+            const token = await teacher.generateAuthToken()
+            const post = teacher.post
+            const university = teacher.university
+            const department = teacher.department
+            const name = teacher.name
+            const email = teacher.email
+            const id = teacher._id
+            console.log(teacher)
+            res.status(200).send({ teacher, token, post, department, university, name, email, id })
         }
-        const token = await teacher.generateAuthToken()
-        const post = teacher.post
-        const university = teacher.university
-        const department = teacher.department
-        const name = teacher.name
-        const email = teacher.email
-        const id = teacher._id
-        console.log(teacher)
-        res.status(200).send({ teacher, token, post, department, university, name, email, id })
     } catch (e) {
-        console.log(e.message)
-        res.status(400).json(e)
+        console.log('error here', e.message)
+        res.status(400).send('wrong username or password')
     }
 })
 

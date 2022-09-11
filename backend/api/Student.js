@@ -177,22 +177,22 @@ router.route('/login').post(async(req, res) => {
         console.log(req.body.email, req.body.password)
         const student = await Student.findByCredentials(req.body.email, req.body.password)
         if (student.activated == false) {
-            res.status(400).send('Id is not activated')
-            throw new Error('Id is not activated')
-            return
+            res.status(200).send('Id is not activated')
+
+        } else {
+            const token = await student.generateAuthToken()
+            const post = student.post
+            const university = student.university
+            const department = student.department
+            const name = student.name
+            const email = student.email
+            const id = student._id
+            const avatar = student.avatar
+            console.log(student)
+            res.status(200).send({ student, avatar, token, post, university, department, name, email, id })
         }
-        const token = await student.generateAuthToken()
-        const post = student.post
-        const university = student.university
-        const department = student.department
-        const name = student.name
-        const email = student.email
-        const id = student._id
-        const avatar = student.avatar
-        console.log(student)
-        res.status(200).send({ student, avatar, token, post, university, department, name, email, id })
     } catch (e) {
-        res.status(400).json(e)
+        res.status(400).json(e.message)
     }
 })
 

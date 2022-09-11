@@ -89,6 +89,7 @@ export default function Studentlogin({navigation}){
            .catch(err =>{
               console.log('hah')
               console.log(err)
+              alert(err.message)
            })
 
         setEmail('')

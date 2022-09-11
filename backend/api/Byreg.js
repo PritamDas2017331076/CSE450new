@@ -27,6 +27,32 @@ router.route('/srr').get((req, res) => {
         .catch(err => res.status(400).json('Error: ' + err));
 })
 
+router.route('/regd').patch((req, res) => {
+    const course_id = req.query.course_id;
+    const section = req.query.section;
+    Byreg.find({ course_id: course_id, section: section })
+        .then(byreg => {
+            console.log('by registration', byreg)
+            byreg.map(async br => {
+                arr = br.record
+                console.log('arr', arr, req.body)
+                arr = arr.filter(ele => req.body.date != ele.date)
+                console.log(arr)
+                const chg = { record: arr }
+                console.log('chg', chg, br._id)
+                try {
+                    const bg = await Byreg.findByIdAndUpdate(br._id, chg, { new: true, runValidators: true })
+                } catch (e) {
+                    res.status(500).send(e.message)
+                }
+                res.status(200).send(byreg)
+            })
+
+        })
+        .catch(err => res.status(400).send('Error: ' + err));
+})
+
+
 router.route('/sr').patch((req, res) => {
     const course_id = req.query.course_id;
     const section = req.query.section;

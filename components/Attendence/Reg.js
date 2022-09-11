@@ -15,8 +15,8 @@ export default function Date({route, navigation}){
 
     useEffect(() => {
         let fl=1
-        console.log(course_id,section)
-        axios.get(`http://${ip}:5000/byreg?course_id=${course_id}&section=${section}`)
+        console.log('course_id,section',course_id,section)
+        axios.get(`http://${ip}:5000/byreg/srr?course_id=${course_id}&section=${section}`)
         .then(res => {
             console.log(' data ', res.data)
             let arr=res.data
